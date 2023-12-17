@@ -15,11 +15,55 @@ Where `YEAR` is a four-digit number, `MONTH` and `DAY` are both two-digit number
 Jekyll also offers powerful support for code snippets:
 
 {% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
+using TMPro;
+using UnityEngine.UI;
+using UnityEngine;
+
+public class ItemSlotUI : MonoBehaviour
+{
+    public Image icon;
+    public TextMeshProUGUI quatityText;
+    private ItemSlot curSlot;
+    private Outline outline;
+
+    public int index;
+    public bool equipped;
+
+    private void Awake()
+    {
+        outline = GetComponent<Outline>();
+    }
+
+    private void OnEnable()
+    {
+        outline.enabled = equipped;
+    }
+
+    public void Set(ItemSlot slot)
+    {
+        curSlot = slot;
+        icon.gameObject.SetActive(true);
+        icon.sprite = slot.item.icon;
+        quatityText.text = slot.quantity > 1 ? slot.quantity.ToString() : string.Empty;
+
+        if (outline != null)
+        {
+            outline.enabled = equipped;
+        }
+    }
+
+    public void Clear()
+    {
+        curSlot = null;
+        icon.gameObject.SetActive(false);
+        quatityText.text = string.Empty;
+    }
+
+    public void OnButtonClick()
+    {
+        Inventory.instance.SelectItem(index);
+    }
+}
 {% endhighlight %}
 
 Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
